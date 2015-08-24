@@ -1,8 +1,8 @@
 # Turbines and manufacturers
 
-
 library(XML)
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 
 data_url <- "http://www.thewindpower.net/turbines_manufacturers_en.php"
@@ -14,7 +14,7 @@ data <- readHTMLTable(doc,
                       trim = TRUE,
                       which = 6
                       )
-
+# Remove empty rows
 data <- filter(data, Country != "")
 
 View(data)
@@ -44,4 +44,25 @@ ggplot(plot_data, aes(Country , Freq,  fill=Country)) +
     guides(fill=FALSE) +
     ggtitle("Number of Turbine Manufacturers by Country") + 
     theme_minimal()
+
+
+plot_data2 <- data %>%
+    separate(col = Remark,
+             into = c("Text", "Year"),
+             sep = " \\(",
+             remove = FALSE,
+             extra = "merge") %>%
+    mutate(Year, Year=gsub("\\)", "", Year)) %>%
+    mutate(Year, Year=gsub("\\#NA", NA , Year)) %>%
+    group_by(Text) %>%
+    summarise(Freq = n())
+
+View(plot_data2)
+
+# A pie chart = stacked bar chart + polar coordinates
+ggplot(plot_data2, aes(x = factor(1), y = Freq, fill = Text)) +
+    geom_bar(width=1, stat="identity") +
+    xlab("") +
+    ylab("") + 
+    coord_polar(theta = "y")
 
