@@ -1,13 +1,22 @@
-# Turbines and manufacturers
+#  ----------------------------------------------------------------------------
+#  R PLOTS EXAMPLES
+#  Turbines and manufacturers
+#  File: turbines_manufacturers.R
+#  Enrique Pérez Herrero
+#  25/Ago/2015
+#  ----------------------------------------------------------------------------
 
 library(XML)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(scales)
 
-data_url <- "http://www.thewindpower.net/turbines_manufacturers_en.php"
 
-doc <- htmlParse(data_url)
+# Get the data
+data.url <- "http://www.thewindpower.net/turbines_manufacturers_en.php"
+
+doc <- htmlParse(data.url)
 
 data <- readHTMLTable(doc,
                       colClasses = c("character","character","character"),
@@ -28,7 +37,7 @@ write.table(data,
 
 # Plot Number of Turbine Manufacturers by Country
 
-plot_data <- data %>%
+plot.data <- data %>%
     group_by(Country) %>%
     summarise(Freq = n()) %>%
     mutate(Country = factor(Country, levels = rev(levels(Country))))
@@ -36,7 +45,7 @@ plot_data <- data %>%
 
 # A bar graph
 # http://stackoverflow.com/questions/32160646/sort-country-names-in-ggplot2-bar-plot
-ggplot(plot_data, aes(Country , Freq,  fill=Country)) + 
+ggplot(plot.data, aes(Country , Freq,  fill=Country)) + 
     coord_flip() +
     geom_bar(stat="identity", width=.90) + 
     xlab("") + # Set axis labels
@@ -46,7 +55,7 @@ ggplot(plot_data, aes(Country , Freq,  fill=Country)) +
     theme_minimal()
 
 
-plot_data2 <- data %>%
+plot.data2 <- data %>%
     separate(col = Remark,
              into = c("Text", "Year"),
              sep = " \\(",
@@ -57,12 +66,13 @@ plot_data2 <- data %>%
     group_by(Text) %>%
     summarise(Freq = n())
 
-View(plot_data2)
+View(plot.data2)
 
 # A pie chart = stacked bar chart + polar coordinates
-ggplot(plot_data2, aes(x = factor(1), y = Freq, fill = Text)) +
+ggplot(plot.data2, aes(x = factor(1), y = Freq, fill = Text)) +
     geom_bar(width=1, stat="identity") +
     xlab("") +
     ylab("") + 
-    coord_polar(theta = "y")
+    coord_polar(theta = "y") # +
+    #scale_y_continuous(labels=percent_format())
 
