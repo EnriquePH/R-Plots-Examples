@@ -6,7 +6,8 @@
 #  25/Ago/2015
 #  ----------------------------------------------------------------------------
 
-library(reshape2)
+library(dplyr)
+library(tidyr)
 library(ggplot2)
 
 data <- "
@@ -23,12 +24,16 @@ data <- "
 2004-01-10  45.33087    7.955217    36.34493
 "
 
-df <- read.delim(textConnection(data), sep = "")
-df$Date <- as.Date(df$Date, "%Y-%m-%d")
+gases.data <- read.delim(textConnection(data), sep = "")
 
-df <- melt(df, id.vars = "Date")
+gases.data <- gases.data %>%
+    mutate(Date = as.Date(Date, "%Y-%m-%d")) %>%
+    gather(key = Gas, value = Concentration, -Date)
+    
 
-ggplot(df, aes(Date, value, col = variable)) + 
+View(gases.data)
+
+ggplot(gases.data, aes(Date, Concentration, col = Gas)) + 
     ylab("Gas") + 
     #geom_line() +
     stat_smooth(method = loess) +
@@ -39,5 +44,4 @@ ggplot(df, aes(Date, value, col = variable)) +
                  )) +
     # Remove legend title
     theme(legend.title = element_blank())
-    
 
