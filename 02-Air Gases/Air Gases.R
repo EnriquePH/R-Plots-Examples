@@ -3,7 +3,7 @@
 #  Air Gases: ggplot2 multiple columns
 #  File: Air Gases.R
 #  Enrique Pérez Herrero
-#  25/Ago/2015
+#  30/Ago/2015
 #  ----------------------------------------------------------------------------
 
 library(dplyr)
@@ -30,7 +30,6 @@ gases.data <- gases.data %>%
     mutate(Date = as.Date(Date, "%Y-%m-%d")) %>%
     gather(key = Gas, value = Concentration, -Date)
     
-
 View(gases.data)
 
 ggplot(gases.data, aes(Date, Concentration, col = Gas)) + 

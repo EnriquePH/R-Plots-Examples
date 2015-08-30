@@ -32,11 +32,10 @@ View(data)
 write.table(data,
             file = "turbines_manufacturers_en.csv",
             col.names = NA,
-            sep=",")
+            sep = ",")
 
 
 # Plot Number of Turbine Manufacturers by Country
-
 plot.data <- data %>%
     group_by(Country) %>%
     summarise(Freq = n()) %>%
@@ -45,12 +44,12 @@ plot.data <- data %>%
 
 # A bar graph
 # http://stackoverflow.com/questions/32160646/sort-country-names-in-ggplot2-bar-plot
-ggplot(plot.data, aes(Country , Freq,  fill=Country)) + 
+ggplot(plot.data, aes(Country , Freq,  fill = Country)) + 
     coord_flip() +
-    geom_bar(stat="identity", width=.90) + 
+    geom_bar(stat = "identity", width = .90) + 
     xlab("") + # Set axis labels
     ylab("") + 
-    guides(fill=FALSE) +
+    guides(fill = FALSE) +
     ggtitle("Number of Turbine Manufacturers by Country") + 
     theme_minimal()
 
@@ -70,7 +69,7 @@ View(plot.data2)
 
 # A pie chart = stacked bar chart + polar coordinates
 ggplot(plot.data2, aes(x = factor(1), y = Freq, fill = Text)) +
-    geom_bar(width=1, stat="identity") +
+    geom_bar(width = 1, stat = "identity") +
     xlab("") +
     ylab("") + 
     coord_polar(theta = "y") # +
