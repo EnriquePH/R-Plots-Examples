@@ -33,7 +33,7 @@ gases.data <- gases.data %>%
 View(gases.data)
 
 ggplot(gases.data, aes(Date, Concentration, col = Gas)) + 
-    ylab("Comcentration") + 
+    ylab("Concentration") + 
     #geom_line() +
     stat_smooth(method = loess) +
     scale_colour_hue(
