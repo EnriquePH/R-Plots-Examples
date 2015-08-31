@@ -54,14 +54,12 @@ data <- read.csv(my_bFile,
                  sep = " ",
                  col.names = c("n", my_sequence)
                  )
-<<<<<<< HEAD
 View(data)
 
 ggplot(data, aes(x = n, y = eval(parse(text = my_sequence)))) +
     geom_point(size = .1, colour = "red") +
     ylab(my_sequence)
-=======
->>>>>>> 401e7b142ab00da520527b230024c324774b055e
+
 
 View(data)
 
