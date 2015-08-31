@@ -2,12 +2,11 @@
 #  R PLOTS EXAMPLES
 #  OEIS Sequences Plot.
 #  File: OEIS-Plot.R
-#  Enrique PÃ©rez Herrero
+#  Enrique Pérez Herrero
 #  31/Ago/2015
 #  ----------------------------------------------------------------------------
 
 library(ggplot2)
-
 
 OEIS_bFile <- function(seq){
     # Returns the bFile name associated to a OEIS sequence
@@ -54,12 +53,8 @@ data <- read.csv(my_bFile,
                  sep = " ",
                  col.names = c("n", my_sequence)
                  )
-
 #View(data)
 
 ggplot(data, aes(x = n, y = eval(parse(text = my_sequence)))) +
     geom_point(size = .1, colour = "red") +
     ylab(my_sequence)
-
-    
-    
