@@ -19,7 +19,7 @@ data.url <- "http://www.thewindpower.net/turbines_manufacturers_en.php"
 doc <- htmlParse(data.url)
 
 data <- readHTMLTable(doc,
-                      colClasses = c("character","character","character"),
+                      colClasses = c("character", "character", "character"),
                       trim = TRUE,
                       which = 6
                       )
@@ -41,6 +41,7 @@ plot.data <- data %>%
     summarise(Freq = n()) %>%
     mutate(Country = factor(Country, levels = rev(levels(Country))))
 
+View(plot.data)
 
 # A bar graph
 # http://stackoverflow.com/questions/32160646/sort-country-names-in-ggplot2-bar-plot
@@ -61,17 +62,27 @@ plot.data2 <- data %>%
              remove = FALSE,
              extra = "merge") %>%
     mutate(Year, Year=gsub("\\)", "", Year)) %>%
-    mutate(Year, Year=gsub("\\#NA", NA , Year)) %>%
-    group_by(Text) %>%
-    summarise(Freq = n())
+    mutate(Year, Year=gsub("\\#NA", NA , Year))
 
 View(plot.data2)
 
+plot.data3 <- plot.data2 %>%
+    group_by(Text) %>%
+    summarise(Freq = n())
+
+View(plot.data3)
+
 # A pie chart = stacked bar chart + polar coordinates
-ggplot(plot.data2, aes(x = factor(1), y = Freq, fill = Text)) +
+ggplot(plot.data3, aes(x = factor(1), y = Freq, fill = Text)) +
     geom_bar(width = 1, stat = "identity") +
     xlab("") +
     ylab("") + 
-    coord_polar(theta = "y") # +
-    #scale_y_continuous(labels=percent_format())
+    coord_polar(theta = "y") +
+    scale_fill_brewer(palette ="Blues") +
+    theme_minimal() +
+    geom_text(aes(y = Freq/2 + c(0, cumsum(Freq)[-length(Freq)]), 
+                  label = percent(Freq / sum(Freq))), size = 5)
+    #scale_y_continuous(labels = percent_format())
+
+
 
