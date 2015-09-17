@@ -24,23 +24,21 @@ data <- "
 2004-01-10  45.33087    7.955217    36.34493
 "
 
+# Loading data
 gases.data <- read.delim(textConnection(data), sep = "")
 
+# Tidying data
 gases.data <- gases.data %>%
     mutate(Date = as.Date(Date, "%Y-%m-%d")) %>%
     gather(key = Gas, value = Concentration, -Date)
-    
-View(gases.data)
+
+# Ploting data
+plot.labels <- expression(NO[2], SO[2], O[3])
 
 ggplot(gases.data, aes(Date, Concentration, col = Gas)) + 
     ylab("Concentration") + 
     #geom_line() +
     stat_smooth(method = loess) +
-    scale_colour_hue(
-        labels=c(expression(NO[2]),
-                 expression(SO[2]),
-                 expression(O[3])
-                 )) +
+    scale_colour_hue(labels = plot.labels) +
     # Remove legend title
     theme(legend.title = element_blank())
-
