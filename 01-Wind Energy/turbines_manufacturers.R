@@ -80,6 +80,16 @@ ggplot(plot.data3, aes(x = factor(1), y = Freq, fill = Text)) +
     coord_polar(theta = "y") +
     scale_fill_brewer(palette ="Blues") +
     theme_minimal() +
+    theme(
+        axis.title.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.border = element_blank(),
+        panel.grid=element_blank(),
+        axis.ticks = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank()
+        ) +
     geom_text(aes(y = Freq/2 + c(0, cumsum(Freq)[-length(Freq)]), 
                   label = percent(Freq / sum(Freq))), size = 5)
     #scale_y_continuous(labels = percent_format())
