@@ -3,7 +3,7 @@
 #  Turbines and manufacturers
 #  File: turbines_manufacturers.R
 #  Enrique Pérez Herrero
-#  25/Ago/2015
+#  29/Sep/2015
 #  ----------------------------------------------------------------------------
 
 library(XML)
@@ -59,10 +59,11 @@ plot.data2 <- data %>%
     separate(col = Remark,
              into = c("Text", "Year"),
              sep = " \\(",
-             remove = FALSE,
-             extra = "merge") %>%
-    mutate(Year, Year=gsub("\\)", "", Year)) %>%
-    mutate(Year, Year=gsub("\\#NA", NA , Year))
+             remove = TRUE,
+             extra = "merge",
+             fill = "right") %>%
+    mutate(Year, Year = gsub("\\)", "", Year)) %>%
+    mutate(Year, Year = gsub("\\#NA", NA , Year))
 
 View(plot.data2)
 
@@ -95,4 +96,14 @@ ggplot(plot.data3, aes(x = factor(1), y = Freq, fill = Text)) +
     #scale_y_continuous(labels = percent_format())
 
 
+plot.data4 <- plot.data2 %>%
+    filter(!is.na(Year) & Text == "Acquired") %>%
+    select(-Text) %>%
+    group_by(Year) %>%
+    summarise(Freq = n())
 
+
+View(plot.data4)
+
+ggplot(plot.data4, aes(x = Year, y = Freq, group = 1)) +
+    geom_line(colour = "red")
