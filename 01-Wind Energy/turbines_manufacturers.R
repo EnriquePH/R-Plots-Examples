@@ -97,13 +97,12 @@ ggplot(plot.data3, aes(x = factor(1), y = Freq, fill = Text)) +
 
 
 plot.data4 <- plot.data2 %>%
-    filter(!is.na(Year) & Text == "Acquired") %>%
-    select(-Text) %>%
-    group_by(Year) %>%
+    filter(!is.na(Year) & (Text == "Acquired" | Text == "No longer exists")) %>%
+    group_by(Year, Text) %>%
     summarise(Freq = n())
 
 
 View(plot.data4)
 
-ggplot(plot.data4, aes(x = Year, y = Freq, group = 1)) +
-    geom_line(colour = "red")
+ggplot(plot.data4, aes(x = as.numeric(Year), y = Freq, colour = Text)) +
+    geom_point()
