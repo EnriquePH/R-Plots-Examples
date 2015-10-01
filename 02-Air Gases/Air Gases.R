@@ -10,6 +10,17 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
+formula.expression <- function(formula){
+    x <- gsub("(\\d+)", "[\\1]*", formula)
+    if(substr(x, nchar(x), nchar(x)) == "*"){
+        x <- substr(x, 1, nchar(x) - 1)
+        x <- as.expression(x)
+        x <- parse(text = x)
+    }
+    return(x)
+}
+
+
 data <- "
       Date       NO2         SO2          O3
 2004-01-01  24.49864    2.756818    30.17857
@@ -28,14 +39,17 @@ data <- "
 gases.data <- read.delim(textConnection(data), sep = "")
 
 # Tidying data
-gases.data <- gases.data %>%
+tidy.gases.data <- gases.data %>%
     mutate(Date = as.Date(Date, "%Y-%m-%d")) %>%
     gather(key = Gas, value = Concentration, -Date)
 
 # Ploting data
-plot.labels <- expression(NO[2], SO[2], O[3])
 
-ggplot(gases.data, aes(Date, Concentration, col = Gas)) + 
+plot.labels <- lapply(colnames(gases.data)[2:4], formula.expression)
+
+# plot.labels <- expression(NO[2], SO[2], O[3])
+
+ggplot(tidy.gases.data, aes(Date, Concentration, col = Gas)) + 
     ylab("Concentration") + 
     #geom_line() +
     stat_smooth(method = loess) +

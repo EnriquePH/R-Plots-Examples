@@ -11,9 +11,11 @@ library(ggplot2)
 
 my_labels <- expression(0, pi / 2, pi, 3 * pi / 4, 2 * pi)
 
+line_size <- .5
+
 ggplot(data.frame(x = c(0, 2*pi)), aes(x)) +
-    stat_function(fun = sin, colour = "red", size = 2) +
-    stat_function(fun = cos, colour = "blue", size = 2) +
+    stat_function(fun = sin, colour = "red", size = line_size) +
+    stat_function(fun = cos, colour = "blue", size = line_size) +
     scale_x_continuous(breaks = 0:4  * pi / 2, 
                        labels = my_labels) +
     ylab("f(x)")
