@@ -7,9 +7,11 @@
 #  ----------------------------------------------------------------------------
 
 library(ggplot2)
-
+library(MASS)
 
 my_labels <- expression(0, pi / 2, pi, 3 * pi / 4, 2 * pi)
+
+#my_labels <- as.expression(paste0(as.character(fractions(0:4/2)) ))
 
 line_size <- .5
 
