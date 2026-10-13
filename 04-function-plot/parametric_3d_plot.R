@@ -13,15 +13,15 @@ min_time <- 1
 max_time <- 100
 
 # Time parametric functions
-X <- function(t) 2 * t
-Y <- function(t) t^2
-Z <- function(t) 10 * cos(t / 10)
+x_t <- function(t) 2 * t
+y_t <- function(t) t^2
+z_t <- function(t) 10 * cos(t / 10)
 
 t <- min_time:max_time
-DF <- data.frame(t = t, x = X(t), y = Y(t), z = Z(t))
+curve <- data.frame(t = t, x = x_t(t), y = y_t(t), z = z_t(t))
 
 # Use manipulate with RStudio
 manipulate({
-    lines3D(x = DF$x, y = DF$y, z = DF$z)
-    scatter3D(x = DF$x[t], y = DF$y[t], z = DF$z[t], add = TRUE)
+    lines3D(x = curve$x, y = curve$y, z = curve$z)
+    scatter3D(x = curve$x[t], y = curve$y[t], z = curve$z[t], add = TRUE)
 }, t = slider(min_time, max_time))

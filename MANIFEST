@@ -1,0 +1,42 @@
+R-Plots-Examples — file manifest
+================================
+
+Repository
+  README.md                     Overview, gallery and usage
+  MANIFEST                      This file
+  Makefile                      Build plots (make), lint, style, install packages, clean
+  .lintr                        lintr style rules (4-space indent, snake_case, 100 cols)
+  LICENSE.txt                   GPL-3.0 license
+  .gitignore                    Ignored R session files (.Rhistory, .RData) and editor files
+  .gitattributes                Line-ending (LF) and binary file rules
+
+01-wind-energy/                 Wind-turbine manufacturers (bar, pie and scatter plots)
+  turbines_manufacturers.R      Script: loads/scrapes data, tidies it, saves 3 plots
+  turbines_manufacturers_en.csv Data: snapshot of thewindpower.net manufacturers table
+  turbine_manufacturers_by_country.png   Output: bar chart by country
+  turbine_manufacturers_by_status.png    Output: pie chart by status
+  turbine_manufacturers_by_year.png      Output: acquisitions/closures per year
+
+02-air-gases/                   Multiple series with LOESS smoothing and plotmath labels
+  air_gases.R                   Script: inline NO2/SO2/O3 data, saves the plot
+  air_gases.png                 Output: concentration over time per gas
+
+03-oeis-plot/                   OEIS integer sequence plot (needs internet)
+  oeis_plot.R                   Script: downloads the b-file of A001615, saves the plot
+  oeis_plot.png                 Output: scatter plot of the sequence
+
+04-function-plot/               Plotting functions without data
+  function_plot.R               Script: sin and cos with pi axis labels, saves the plot
+  function_plot.png             Output: sin(x) and cos(x) over [0, 2*pi]
+  parametric_3d_plot.R          Script: parametric 3D curve with slider (RStudio only)
+
+05-madrid-traffic/              Multi-sheet Excel file of Madrid traffic accidents
+  madrid_traffic.R              Script: reads all yearly sheets, tidies them, saves the plot
+  03_accidentes_por_tipo_y_dia_semana_2013.xls   Data: accidents by type and weekday, 2009-2014
+  madrid_traffic.png            Output: accidents by weekday, one panel per accident type
+
+06-network/                     Interactive network graph
+  network.R                     Script: small networkD3 graph (opens in the viewer/browser)
+
+07-spain-map/                   Choropleth map of Spain (needs internet)
+  spain_map.R                   Script: population density by province with sf + mapSpain

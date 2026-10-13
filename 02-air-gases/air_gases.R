@@ -1,24 +1,26 @@
 #  ----------------------------------------------------------------------------
 #  R PLOTS EXAMPLES
 #  Air Gases: ggplot2 multiple columns
-#  File: Air Gases.R
+#  File: air_gases.R
 #  Enrique Pérez Herrero
 #  30/Ago/2015
 #  ----------------------------------------------------------------------------
+#
+#  Run from this folder: Rscript air_gases.R
 
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-formula.expression <- function(formula){
+formula_expression <- function(formula) {
     # Turns a chemical formula such as "NO2" into the plotmath expression NO[2]
     x <- gsub("(\\d+)", "[\\1]*", formula)
     x <- sub("\\*$", "", x)
-    parse(text = x)
+    parse(text = x)[[1]]
 }
 
 
-data <- "
+gases_text <- "
       Date       NO2         SO2          O3
 2004-01-01  24.49864    2.756818    30.17857
 2004-01-02  33.40000    3.912609    22.45514
@@ -32,24 +34,23 @@ data <- "
 2004-01-10  45.33087    7.955217    36.34493
 "
 
-# Loading data
-gases.data <- read.delim(textConnection(data), sep = "")
+# Load the data
+gases <- read.table(text = gases_text, header = TRUE)
 
-# Tidying data
-tidy.gases.data <- gases.data %>%
-    mutate(Date = as.Date(Date, "%Y-%m-%d")) %>%
+# Tidy the data: one row per date and gas
+gases_long <- gases |>
+    mutate(Date = as.Date(Date)) |>
     pivot_longer(-Date, names_to = "Gas", values_to = "Concentration")
 
-# Plotting data
+# Plot the data, with subscripts in the legend labels (NO₂, SO₂, O₃)
+gas_names  <- setdiff(names(gases), "Date")
+gas_labels <- setNames(lapply(gas_names, formula_expression), gas_names)
 
-plot.labels <- lapply(colnames(gases.data)[2:4], formula.expression)
+p_gases <- ggplot(gases_long, aes(Date, Concentration, colour = Gas)) +
+    geom_point(alpha = .5) +
+    geom_smooth(method = "loess", formula = y ~ x) +
+    scale_colour_hue(labels = gas_labels) +
+    labs(title = "Air Gases Concentration", x = NULL, colour = NULL) +
+    theme_minimal()
 
-# plot.labels <- expression(NO[2], SO[2], O[3])
-
-ggplot(tidy.gases.data, aes(Date, Concentration, col = Gas)) + 
-    ylab("Concentration") + 
-    #geom_line() +
-    stat_smooth(method = loess, formula = y ~ x) +
-    scale_colour_hue(labels = plot.labels) +
-    # Remove legend title
-    theme(legend.title = element_blank())
+ggsave("air_gases.png", p_gases, width = 7, height = 4, dpi = 100, bg = "white")
