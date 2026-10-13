@@ -2,11 +2,10 @@
 #  R PLOTS EXAMPLES
 #  OEIS Sequences Plot.
 #  File: OEIS-Plot.R
-#  Enrique Pérez Herrero
+#  Enrique PÃ©rez Herrero
 #  31/Ago/2015
 #  ----------------------------------------------------------------------------
 
-library(XML)
 library(ggplot2)
 
 OEIS_bFile <- function(seq){
@@ -30,7 +29,7 @@ OEIS_sequence_url <- function(seq, bFile = FALSE){
     #
     # Returns:
     #    A string with the OEIS url required
-    OEIS_url <- "http://oeis.org"
+    OEIS_url <- "https://oeis.org"
     if(bFile){
         # bFile url
         return(paste(OEIS_url, seq, OEIS_bFile(seq), sep = "/"))
@@ -56,33 +55,22 @@ data <- read.csv(my_bFile,
                  )
 #View(data)
 
-ggplot(data, aes(x = n, y = eval(parse(text = my_sequence)))) +
+ggplot(data, aes(x = n, y = .data[[my_sequence]])) +
     geom_point(size = .05, colour = "red") +
     theme(axis.title.y = element_text(angle = 0)) +
     ylab(paste0(my_sequence, "(n)"))
 
 
-OEIS_data <- readLines(OEIS_sequence_url(my_sequence))
 
-OEIS_data <- htmlParse(OEIS_data)
+# Sequence metadata from the OEIS JSON API
+OEIS_info <- jsonlite::fromJSON(paste0("https://oeis.org/search?q=id:",
+                                       my_sequence, "&fmt=json"))
 
-OEIS_data
-
-
-OEIS_name <- xpathApply(OEIS_data, "//tr[3]/td/table/tr/td[3]/text()")[[1]]
-OEIS_name <- xmlValue(OEIS_name)
-OEIS_name <- gsub("^\\s+|\\s+$", "", OEIS_name)
+OEIS_name <- OEIS_info$name
 OEIS_name
 
-
-OEIS_former_name <- xpathApply(OEIS_data, "//tr[3]/td/table/tr/td/font/text()")[[1]]
-OEIS_former_name <- xmlValue(OEIS_former_name)
-OEIS_former_name <- gsub("^\\(|\\)$", "", OEIS_former_name)
-OEIS_former_name
-
-
-OEIS_seq_data <- xpathApply(OEIS_data, "//tr[4]/td/table/tr/td/tt/text()")[[1]]
+OEIS_seq_data <- as.numeric(strsplit(OEIS_info$data, ",")[[1]])
 OEIS_seq_data
 
-OEIS_seq_text <- xpathApply(OEIS_data, "//tr[5]/td/table/tr[td]/td")
+OEIS_seq_text <- OEIS_info$comment[[1]]
 OEIS_seq_text

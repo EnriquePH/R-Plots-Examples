@@ -2,7 +2,7 @@
 #  R PLOTS EXAMPLES
 #  Madrid Traffic data: ggplot2 multiple columns
 #  File: Madrid-Traffic-data.R
-#  Enrique Pérez Herrero
+#  Enrique PÃ©rez Herrero
 #  04/Oct/2015
 #  ----------------------------------------------------------------------------
 

@@ -2,7 +2,7 @@
 #  R PLOTS EXAMPLES
 #  Air Gases: ggplot2 multiple columns
 #  File: Air Gases.R
-#  Enrique Pérez Herrero
+#  Enrique PÃ©rez Herrero
 #  30/Ago/2015
 #  ----------------------------------------------------------------------------
 
@@ -11,13 +11,10 @@ library(tidyr)
 library(ggplot2)
 
 formula.expression <- function(formula){
+    # Turns a chemical formula such as "NO2" into the plotmath expression NO[2]
     x <- gsub("(\\d+)", "[\\1]*", formula)
-    if(substr(x, nchar(x), nchar(x)) == "*"){
-        x <- substr(x, 1, nchar(x) - 1)
-        x <- as.expression(x)
-        x <- parse(text = x)
-    }
-    return(x)
+    x <- sub("\\*$", "", x)
+    parse(text = x)
 }
 
 
@@ -41,9 +38,9 @@ gases.data <- read.delim(textConnection(data), sep = "")
 # Tidying data
 tidy.gases.data <- gases.data %>%
     mutate(Date = as.Date(Date, "%Y-%m-%d")) %>%
-    gather(key = Gas, value = Concentration, -Date)
+    pivot_longer(-Date, names_to = "Gas", values_to = "Concentration")
 
-# Ploting data
+# Plotting data
 
 plot.labels <- lapply(colnames(gases.data)[2:4], formula.expression)
 
@@ -52,7 +49,7 @@ plot.labels <- lapply(colnames(gases.data)[2:4], formula.expression)
 ggplot(tidy.gases.data, aes(Date, Concentration, col = Gas)) + 
     ylab("Concentration") + 
     #geom_line() +
-    stat_smooth(method = loess) +
+    stat_smooth(method = loess, formula = y ~ x) +
     scale_colour_hue(labels = plot.labels) +
     # Remove legend title
     theme(legend.title = element_blank())

@@ -1,5 +1,9 @@
-# R Code .gitignore
-# (c) Kikesoft 2015
+# R
 .Rhistory
 .RData
+.Rproj.user/
+*.Rproj
 
+# OS / editors
+.DS_Store
+.vscode/

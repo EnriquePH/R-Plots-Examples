@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.R    text
+*.md   text
+*.csv  text
+*.png  binary
+*.xls  binary
