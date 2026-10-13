@@ -9,7 +9,7 @@
 #  Run from this folder: Rscript spain_map.R  (needs an internet connection)
 #  Province boundaries are downloaded by mapSpain from Eurostat GISCO
 #  (© EuroGeographics for the administrative boundaries) and cached locally.
-#  Population: mapSpain::pobmun19, INE municipal register 2019.
+#  Population: mapSpain::pobmun25, INE municipal register 2025.
 
 library(dplyr)
 library(ggplot2)
@@ -17,13 +17,15 @@ library(sf)
 library(mapSpain)
 
 # Population by province, adding up the municipalities
-population <- mapSpain::pobmun19 |>
+population <- mapSpain::pobmun25 |>
     group_by(cpro) |>
-    summarise(population = sum(pob19))
+    summarise(population = sum(pob25))
 
 # Areas are measured on the real geometry: with moveCAN = TRUE the Canary
 # Islands are shifted next to the peninsula, which would distort their area.
-areas <- esp_get_prov(moveCAN = FALSE, resolution = "20") |>
+# The detailed 1:1M boundaries are used here; the 1:20M ones used for drawing
+# shrink small provinces such as Ceuta and Melilla to less than half their size.
+areas <- esp_get_prov(moveCAN = FALSE, resolution = "01") |>
     mutate(area_km2 = as.numeric(st_area(geometry)) / 1e6) |>
     st_drop_geometry() |>
     select(cpro, area_km2)
@@ -38,8 +40,9 @@ p_spain <- ggplot(provinces) +
     geom_sf(data = esp_get_can_box(), colour = "grey50") +
     scale_fill_viridis_c(trans = "log10", labels = scales::label_comma(),
                          name = "Inhabitants\nper km²") +
-    labs(title = "Population density by province, Spain 2019",
-         caption = "Data: INE municipal register 2019 · Boundaries: © EuroGeographics (GISCO)") +
-    theme_void()
+    labs(title = "Population density by province, Spain 2025",
+         caption = "Data: INE municipal register 2025 · Boundaries: © EuroGeographics (GISCO)") +
+    theme_void() +
+    theme(plot.margin = margin(10, 10, 10, 10))
 
 ggsave("spain_map.png", p_spain, width = 8, height = 6, dpi = 100, bg = "white")

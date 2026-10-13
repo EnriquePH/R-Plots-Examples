@@ -26,6 +26,8 @@ See [MANIFEST](MANIFEST) for a description of every file in the repository.
 
 ![Madrid traffic accidents](05-madrid-traffic/madrid_traffic.png)
 
+![Population density by province](07-spain-map/spain_map.png)
+
 ## Installation
 
 Requires R ≥ 4.1 (the scripts use the native `|>` pipe).

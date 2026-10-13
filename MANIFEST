@@ -40,3 +40,4 @@ Repository
 
 07-spain-map/                   Choropleth map of Spain (needs internet)
   spain_map.R                   Script: population density by province with sf + mapSpain
+  spain_map.png                 Output: choropleth map, Canary Islands in an inset box
